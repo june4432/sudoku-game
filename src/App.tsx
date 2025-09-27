@@ -23,7 +23,7 @@ const App: React.FC = () => {
 
   const generateSudoku = (difficulty: 'easy' | 'medium'): Board => {
     const solution = generateCompleteSudoku();
-    const puzzle = createPuzzle(solution, difficulty === 'easy' ? 35 : 45);
+    const puzzle = createPuzzle(solution, difficulty === 'easy' ? 45 : 35);
 
     return puzzle.map((row, rowIndex) =>
       row.map((value, colIndex) => ({
@@ -37,48 +37,66 @@ const App: React.FC = () => {
   };
 
   const generateCompleteSudoku = (): number[][] => {
+    // 더 안정적인 스도쿠 생성
     const board = Array(9).fill(null).map(() => Array(9).fill(0));
 
-    const isValid = (board: number[][], row: number, col: number, num: number): boolean => {
-      for (let x = 0; x < 9; x++) {
-        if (board[row][x] === num) return false;
-      }
+    // 기본 패턴으로 시작
+    const basePattern = [
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [4, 5, 6, 7, 8, 9, 1, 2, 3],
+      [7, 8, 9, 1, 2, 3, 4, 5, 6],
+      [2, 3, 4, 5, 6, 7, 8, 9, 1],
+      [5, 6, 7, 8, 9, 1, 2, 3, 4],
+      [8, 9, 1, 2, 3, 4, 5, 6, 7],
+      [3, 4, 5, 6, 7, 8, 9, 1, 2],
+      [6, 7, 8, 9, 1, 2, 3, 4, 5],
+      [9, 1, 2, 3, 4, 5, 6, 7, 8]
+    ];
 
-      for (let x = 0; x < 9; x++) {
-        if (board[x][col] === num) return false;
+    // 기본 패턴을 복사
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        board[i][j] = basePattern[i][j];
       }
+    }
 
-      const startRow = row - (row % 3);
-      const startCol = col - (col % 3);
-      for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-          if (board[i + startRow][j + startCol] === num) return false;
+    // 랜덤하게 섮기 (행 섮기)
+    for (let i = 0; i < 50; i++) {
+      const row1 = Math.floor(Math.random() / 3) * 3 + Math.floor(Math.random() * 3);
+      const row2 = Math.floor(row1 / 3) * 3 + Math.floor(Math.random() * 3);
+      if (row1 !== row2) {
+        [board[row1], board[row2]] = [board[row2], board[row1]];
+      }
+    }
+
+    // 랜덤하게 섮기 (열 섮기)
+    for (let i = 0; i < 50; i++) {
+      const col1 = Math.floor(Math.random() / 3) * 3 + Math.floor(Math.random() * 3);
+      const col2 = Math.floor(col1 / 3) * 3 + Math.floor(Math.random() * 3);
+      if (col1 !== col2) {
+        for (let row = 0; row < 9; row++) {
+          [board[row][col1], board[row][col2]] = [board[row][col2], board[row][col1]];
         }
       }
+    }
 
-      return true;
-    };
-
-    const solve = (board: number[][]): boolean => {
-      for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-          if (board[row][col] === 0) {
-            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
-            for (let num of numbers) {
-              if (isValid(board, row, col, num)) {
-                board[row][col] = num;
-                if (solve(board)) return true;
-                board[row][col] = 0;
-              }
+    // 숫자 치환
+    for (let i = 0; i < 20; i++) {
+      const num1 = Math.floor(Math.random() * 9) + 1;
+      const num2 = Math.floor(Math.random() * 9) + 1;
+      if (num1 !== num2) {
+        for (let row = 0; row < 9; row++) {
+          for (let col = 0; col < 9; col++) {
+            if (board[row][col] === num1) {
+              board[row][col] = num2;
+            } else if (board[row][col] === num2) {
+              board[row][col] = num1;
             }
-            return false;
           }
         }
       }
-      return true;
-    };
+    }
 
-    solve(board);
     return board;
   };
 
@@ -209,17 +227,49 @@ const App: React.FC = () => {
   };
 
   const findCorrectValue = (row: number, col: number): number => {
+    // 현재 보드 상태를 숫자 배열로 변환
+    const currentBoard = board.map(r => r.map(c => c.value || 0));
+
+    // 백트래킹으로 해를 구함
+    const solution = solveSudoku([...currentBoard.map(r => [...r])]);
+
+    if (solution && solution[row][col] !== 0) {
+      return solution[row][col];
+    }
+
+    // 해가 없으면 유효한 첫 번째 숫자 반환
     for (let num = 1; num <= 9; num++) {
       if (isValidMove(board, row, col, num)) {
-        const testBoard = board.map(r => r.map(c => ({ ...c })));
-        testBoard[row][col].value = num;
-
-        if (canCompleteSudoku(testBoard)) {
-          return num;
-        }
+        return num;
       }
     }
     return 1;
+  };
+
+  const solveSudoku = (board: number[][]): number[][] | null => {
+    const solve = (board: number[][]): boolean => {
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          if (board[row][col] === 0) {
+            for (let num = 1; num <= 9; num++) {
+              if (isValidForSolution(board, row, col, num)) {
+                board[row][col] = num;
+                if (solve(board)) return true;
+                board[row][col] = 0;
+              }
+            }
+            return false;
+          }
+        }
+      }
+      return true;
+    };
+
+    const boardCopy = board.map(row => [...row]);
+    if (solve(boardCopy)) {
+      return boardCopy;
+    }
+    return null;
   };
 
   const canCompleteSudoku = (board: Board): boolean => {
