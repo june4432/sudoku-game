@@ -348,9 +348,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-blue-400 p-2 md:p-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl md:text-5xl font-bold text-center text-white mb-3 md:mb-6 drop-shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-blue-400 p-1 md:p-4 flex flex-col">
+      <div className="max-w-4xl mx-auto w-full flex-1 flex flex-col">
+        <h1 className="text-2xl md:text-5xl font-bold text-center text-white mb-2 md:mb-6 drop-shadow-lg">
           🎮 스도쿠 게임 🌟
         </h1>
 
@@ -362,8 +362,8 @@ const App: React.FC = () => {
           </div>
         )}
 
-        <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-3 md:p-6 mb-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 md:mb-6 gap-3">
+        <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-2 md:p-6 mb-2 md:mb-4 flex-1 flex flex-col">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-2 md:mb-6 gap-2">
             <div className="flex gap-2 md:gap-4">
               <button
                 onClick={() => setDifficulty('easy')}
@@ -387,12 +387,12 @@ const App: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex gap-4 md:gap-6">
-              <div className="text-sm md:text-lg font-bold">
-                ❌ 실수: <span className="text-red-500">{mistakes}</span>/3
+            <div className="flex gap-3 md:gap-6">
+              <div className="text-xs md:text-lg font-bold">
+                ❌ <span className="text-red-500">{mistakes}</span>/3
               </div>
-              <div className="text-sm md:text-lg font-bold">
-                💡 힌트: <span className="text-blue-500">{hints}</span>
+              <div className="text-xs md:text-lg font-bold">
+                💡 <span className="text-blue-500">{hints}</span>
               </div>
             </div>
           </div>
@@ -451,29 +451,29 @@ const App: React.FC = () => {
             ))}
           </div>
 
-          <div className="mt-4 md:mt-8">
-            <div className="grid grid-cols-5 gap-2 md:gap-3 max-w-md mx-auto px-2">
+          <div className="mt-2 md:mt-8 flex-shrink-0">
+            <div className="grid grid-cols-5 gap-1 md:gap-3 max-w-sm md:max-w-md mx-auto px-2">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
                 <button
                   key={num}
                   onClick={() => handleNumberInput(num)}
-                  className="bg-gradient-to-r from-blue-400 to-purple-400 text-white text-lg sm:text-xl md:text-2xl font-bold py-3 px-3 sm:py-4 sm:px-6 rounded-xl md:rounded-2xl shadow-lg transition-all transform hover:scale-110 hover:rotate-3 active:scale-95"
+                  className="bg-gradient-to-r from-blue-400 to-purple-400 text-white text-base sm:text-xl md:text-2xl font-bold py-2 px-2 sm:py-4 sm:px-6 rounded-lg md:rounded-2xl shadow-lg transition-all transform hover:scale-110 hover:rotate-3 active:scale-95"
                 >
                   {num}
                 </button>
               ))}
               <button
                 onClick={handleClear}
-                className="bg-gradient-to-r from-gray-400 to-gray-500 text-white text-lg md:text-xl font-bold py-3 px-3 sm:py-4 sm:px-4 rounded-xl md:rounded-2xl shadow-lg transition-all transform hover:scale-110 active:scale-95"
+                className="bg-gradient-to-r from-gray-400 to-gray-500 text-white text-base md:text-xl font-bold py-2 px-2 sm:py-4 sm:px-4 rounded-lg md:rounded-2xl shadow-lg transition-all transform hover:scale-110 active:scale-95"
               >
                 🗑️
               </button>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mt-4 md:mt-6">
+            <div className="flex flex-col sm:flex-row justify-center gap-2 md:gap-4 mt-2 md:mt-6">
               <button
                 onClick={() => setIsMemoMode(!isMemoMode)}
-                className={`px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl font-bold text-base md:text-xl shadow-lg transition-all transform hover:scale-105 ${
+                className={`px-4 py-2 md:px-8 md:py-4 rounded-lg md:rounded-2xl font-bold text-sm md:text-xl shadow-lg transition-all transform hover:scale-105 ${
                   isMemoMode
                     ? 'bg-gradient-to-r from-pink-400 to-purple-400 text-white'
                     : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700'
@@ -484,7 +484,7 @@ const App: React.FC = () => {
               <button
                 onClick={handleHint}
                 disabled={hints <= 0 || isMemoMode}
-                className={`px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl font-bold text-base md:text-xl shadow-lg transition-all transform hover:scale-105 ${
+                className={`px-4 py-2 md:px-8 md:py-4 rounded-lg md:rounded-2xl font-bold text-sm md:text-xl shadow-lg transition-all transform hover:scale-105 ${
                   hints > 0 && !isMemoMode
                     ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white hover:from-yellow-500 hover:to-orange-500'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -495,7 +495,7 @@ const App: React.FC = () => {
 
               <button
                 onClick={initGame}
-                className="px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-green-400 to-blue-400 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-xl shadow-lg transition-all transform hover:scale-105 hover:from-green-500 hover:to-blue-500"
+                className="px-4 py-2 md:px-8 md:py-4 bg-gradient-to-r from-green-400 to-blue-400 text-white rounded-lg md:rounded-2xl font-bold text-sm md:text-xl shadow-lg transition-all transform hover:scale-105 hover:from-green-500 hover:to-blue-500"
               >
                 🎲 새 게임
               </button>
@@ -503,9 +503,9 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl md:rounded-2xl p-3 md:p-4 shadow-xl">
-          <h2 className="text-lg md:text-2xl font-bold text-purple-600 mb-2 md:mb-3">🎯 게임 방법</h2>
-          <ul className="space-y-1 md:space-y-2 text-sm md:text-lg">
+        <div className="bg-white rounded-xl md:rounded-2xl p-2 md:p-4 shadow-xl mt-2 md:mt-4">
+          <h2 className="text-base md:text-2xl font-bold text-purple-600 mb-1 md:mb-3">🎯 게임 방법</h2>
+          <ul className="space-y-0.5 md:space-y-2 text-xs md:text-lg">
             <li className="flex items-start">
               <span className="mr-2">📝</span>
               <span>1~9까지 숫자를 빈 칸에 넣어요</span>
