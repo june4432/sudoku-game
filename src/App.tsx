@@ -523,6 +523,14 @@ const App: React.FC = () => {
               <span>3x3 박스 안에도 같은 숫자가 두 번 나오면 안돼요</span>
             </li>
             <li className="flex items-start">
+              <span className="mr-2">🔢</span>
+              <span><strong>숫자 모드:</strong> 확실한 답을 입력할 때 사용해요</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2">✏️</span>
+              <span><strong>메모 모드:</strong> 가능한 숫자들을 기록해둘 때 사용해요</span>
+            </li>
+            <li className="flex items-start">
               <span className="mr-2">💡</span>
               <span>어려우면 힌트를 사용해보세요!</span>
             </li>
