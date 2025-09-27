@@ -6,6 +6,7 @@ type Cell = {
   isFixed: boolean;
   isError: boolean;
   isHint: boolean;
+  memos: Set<number>;
 };
 
 type Board = Cell[][];
@@ -18,6 +19,7 @@ const App: React.FC = () => {
   const [gameWon, setGameWon] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium'>('easy');
+  const [isMemoMode, setIsMemoMode] = useState(false);
 
   const generateSudoku = (difficulty: 'easy' | 'medium'): Board => {
     const solution = generateCompleteSudoku();
@@ -29,6 +31,7 @@ const App: React.FC = () => {
         isFixed: value !== 0,
         isError: false,
         isHint: false,
+        memos: new Set<number>(),
       }))
     );
   };
@@ -103,6 +106,7 @@ const App: React.FC = () => {
     setGameWon(false);
     setShowCelebration(false);
     setSelectedCell(null);
+    setIsMemoMode(false);
   };
 
   useEffect(() => {
@@ -121,21 +125,41 @@ const App: React.FC = () => {
     const [row, col] = selectedCell;
     if (board[row][col].isFixed) return;
 
-    const newBoard = board.map(r => r.map(c => ({ ...c })));
+    const newBoard = board.map(r => r.map(c => ({
+      ...c,
+      memos: new Set(c.memos)
+    })));
 
-    newBoard[row][col].value = num;
-    newBoard[row][col].isHint = false;
+    if (isMemoMode) {
+      // 메모 모드에서는 숫자를 토글
+      if (newBoard[row][col].memos.has(num)) {
+        newBoard[row][col].memos.delete(num);
+      } else {
+        newBoard[row][col].memos.add(num);
+      }
+      // 메모 추가 시 기존 값 제거
+      if (newBoard[row][col].value !== null) {
+        newBoard[row][col].value = null;
+        newBoard[row][col].isError = false;
+        newBoard[row][col].isHint = false;
+      }
+    } else {
+      // 일반 모드에서는 값 입력
+      newBoard[row][col].value = num;
+      newBoard[row][col].isHint = false;
+      newBoard[row][col].memos.clear(); // 값 입력 시 메모 제거
 
-    const isError = !isValidMove(newBoard, row, col, num);
-    newBoard[row][col].isError = isError;
+      const isError = !isValidMove(newBoard, row, col, num);
+      newBoard[row][col].isError = isError;
 
-    if (isError) {
-      setMistakes(mistakes + 1);
+      if (isError) {
+        setMistakes(mistakes + 1);
+      }
     }
 
     setBoard(newBoard);
 
-    if (checkWin(newBoard)) {
+    if (!isMemoMode && checkWin(newBoard)) {
       setGameWon(true);
       setShowCelebration(true);
       setTimeout(() => setShowCelebration(false), 3000);
@@ -148,10 +172,14 @@ const App: React.FC = () => {
     const [row, col] = selectedCell;
     if (board[row][col].isFixed) return;
 
-    const newBoard = board.map(r => r.map(c => ({ ...c })));
+    const newBoard = board.map(r => r.map(c => ({
+      ...c,
+      memos: new Set(c.memos)
+    })));
     newBoard[row][col].value = null;
     newBoard[row][col].isError = false;
     newBoard[row][col].isHint = false;
+    newBoard[row][col].memos.clear();
     setBoard(newBoard);
   };
 
@@ -355,7 +383,19 @@ const App: React.FC = () => {
                     ${!cell.isFixed && !cell.isError && !cell.isHint ? 'text-blue-600' : ''}
                   `}
                 >
-                  {cell.value || ''}
+                  {cell.value ? (
+                    <span className="">{cell.value}</span>
+                  ) : cell.memos.size > 0 ? (
+                    <div className="grid grid-cols-3 gap-0 w-full h-full text-[0.4rem] sm:text-[0.5rem] md:text-xs text-gray-500 font-normal">
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(memoNum => (
+                        <div key={memoNum} className="flex items-center justify-center">
+                          {cell.memos.has(memoNum) ? memoNum : ''}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               ))
             ))}
@@ -382,10 +422,20 @@ const App: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mt-4 md:mt-6">
               <button
-                onClick={handleHint}
-                disabled={hints <= 0}
+                onClick={() => setIsMemoMode(!isMemoMode)}
                 className={`px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl font-bold text-base md:text-xl shadow-lg transition-all transform hover:scale-105 ${
-                  hints > 0
+                  isMemoMode
+                    ? 'bg-gradient-to-r from-pink-400 to-purple-400 text-white'
+                    : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700'
+                }`}
+              >
+                ✏️ {isMemoMode ? '메모 모드' : '숫자 모드'}
+              </button>
+              <button
+                onClick={handleHint}
+                disabled={hints <= 0 || isMemoMode}
+                className={`px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl font-bold text-base md:text-xl shadow-lg transition-all transform hover:scale-105 ${
+                  hints > 0 && !isMemoMode
                     ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white hover:from-yellow-500 hover:to-orange-500'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
