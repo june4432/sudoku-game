@@ -335,7 +335,7 @@ const App: React.FC = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-9 gap-0 mx-auto w-fit max-w-full border-2 md:border-4 border-purple-500 rounded-lg md:rounded-xl overflow-hidden shadow-xl">
+          <div className="grid grid-cols-9 gap-0 mx-auto w-fit max-w-full border-[3px] md:border-4 border-purple-500 rounded-lg md:rounded-xl overflow-hidden shadow-xl">
             {board.map((row, rowIndex) => (
               row.map((cell, colIndex) => (
                 <div
@@ -344,8 +344,8 @@ const App: React.FC = () => {
                   className={`
                     w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center cursor-pointer
                     text-base sm:text-xl md:text-2xl font-bold transition-all transform md:hover:scale-105
-                    ${(rowIndex + 1) % 3 === 0 && rowIndex !== 8 ? 'border-b-2 md:border-b-4 border-b-purple-500' : ''}
-                    ${(colIndex + 1) % 3 === 0 && colIndex !== 8 ? 'border-r-2 md:border-r-4 border-r-purple-500' : ''}
+                    ${(rowIndex + 1) % 3 === 0 && rowIndex !== 8 ? 'border-b-[3px] md:border-b-4 border-b-purple-500' : ''}
+                    ${(colIndex + 1) % 3 === 0 && colIndex !== 8 ? 'border-r-[3px] md:border-r-4 border-r-purple-500' : ''}
                     ${selectedCell?.[0] === rowIndex && selectedCell?.[1] === colIndex
                       ? 'bg-yellow-200 shadow-inner'
                       : 'hover:bg-blue-100'}
