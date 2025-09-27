@@ -270,9 +270,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-blue-400 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-blue-400 p-2 md:p-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl font-bold text-center text-white mb-6 drop-shadow-lg">
+        <h1 className="text-3xl md:text-5xl font-bold text-center text-white mb-3 md:mb-6 drop-shadow-lg">
           🎮 스도쿠 게임 🌟
         </h1>
 
@@ -284,12 +284,12 @@ const App: React.FC = () => {
           </div>
         )}
 
-        <div className="bg-white rounded-3xl shadow-2xl p-6 mb-4">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex gap-4">
+        <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-3 md:p-6 mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 md:mb-6 gap-3">
+            <div className="flex gap-2 md:gap-4">
               <button
                 onClick={() => setDifficulty('easy')}
-                className={`px-6 py-3 rounded-full font-bold transition-all transform hover:scale-105 ${
+                className={`px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full font-bold transition-all transform hover:scale-105 ${
                   difficulty === 'easy'
                     ? 'bg-green-400 text-white shadow-lg'
                     : 'bg-gray-200 text-gray-700'
@@ -299,7 +299,7 @@ const App: React.FC = () => {
               </button>
               <button
                 onClick={() => setDifficulty('medium')}
-                className={`px-6 py-3 rounded-full font-bold transition-all transform hover:scale-105 ${
+                className={`px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full font-bold transition-all transform hover:scale-105 ${
                   difficulty === 'medium'
                     ? 'bg-orange-400 text-white shadow-lg'
                     : 'bg-gray-200 text-gray-700'
@@ -309,11 +309,11 @@ const App: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex gap-6">
-              <div className="text-lg font-bold">
+            <div className="flex gap-4 md:gap-6">
+              <div className="text-sm md:text-lg font-bold">
                 ❌ 실수: <span className="text-red-500">{mistakes}</span>/3
               </div>
-              <div className="text-lg font-bold">
+              <div className="text-sm md:text-lg font-bold">
                 💡 힌트: <span className="text-blue-500">{hints}</span>
               </div>
             </div>
@@ -335,17 +335,17 @@ const App: React.FC = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-9 gap-0 mx-auto w-fit border-4 border-purple-500 rounded-xl overflow-hidden shadow-xl">
+          <div className="grid grid-cols-9 gap-0 mx-auto w-fit max-w-full border-2 md:border-4 border-purple-500 rounded-lg md:rounded-xl overflow-hidden shadow-xl">
             {board.map((row, rowIndex) => (
               row.map((cell, colIndex) => (
                 <div
                   key={`${rowIndex}-${colIndex}`}
                   onClick={() => handleCellClick(rowIndex, colIndex)}
                   className={`
-                    w-14 h-14 border border-gray-300 flex items-center justify-center cursor-pointer
-                    text-2xl font-bold transition-all transform hover:scale-105
-                    ${(rowIndex + 1) % 3 === 0 && rowIndex !== 8 ? 'border-b-4 border-b-purple-500' : ''}
-                    ${(colIndex + 1) % 3 === 0 && colIndex !== 8 ? 'border-r-4 border-r-purple-500' : ''}
+                    w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 border border-gray-300 flex items-center justify-center cursor-pointer
+                    text-base sm:text-xl md:text-2xl font-bold transition-all transform md:hover:scale-105
+                    ${(rowIndex + 1) % 3 === 0 && rowIndex !== 8 ? 'border-b-2 md:border-b-4 border-b-purple-500' : ''}
+                    ${(colIndex + 1) % 3 === 0 && colIndex !== 8 ? 'border-r-2 md:border-r-4 border-r-purple-500' : ''}
                     ${selectedCell?.[0] === rowIndex && selectedCell?.[1] === colIndex
                       ? 'bg-yellow-200 shadow-inner'
                       : 'hover:bg-blue-100'}
@@ -361,30 +361,30 @@ const App: React.FC = () => {
             ))}
           </div>
 
-          <div className="mt-8">
-            <div className="grid grid-cols-5 gap-3 max-w-md mx-auto">
+          <div className="mt-4 md:mt-8">
+            <div className="grid grid-cols-5 gap-2 md:gap-3 max-w-md mx-auto px-2">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
                 <button
                   key={num}
                   onClick={() => handleNumberInput(num)}
-                  className="bg-gradient-to-r from-blue-400 to-purple-400 text-white text-2xl font-bold py-4 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-110 hover:rotate-3 active:scale-95"
+                  className="bg-gradient-to-r from-blue-400 to-purple-400 text-white text-lg sm:text-xl md:text-2xl font-bold py-3 px-3 sm:py-4 sm:px-6 rounded-xl md:rounded-2xl shadow-lg transition-all transform hover:scale-110 hover:rotate-3 active:scale-95"
                 >
                   {num}
                 </button>
               ))}
               <button
                 onClick={handleClear}
-                className="bg-gradient-to-r from-gray-400 to-gray-500 text-white text-xl font-bold py-4 px-4 rounded-2xl shadow-lg transition-all transform hover:scale-110 active:scale-95"
+                className="bg-gradient-to-r from-gray-400 to-gray-500 text-white text-lg md:text-xl font-bold py-3 px-3 sm:py-4 sm:px-4 rounded-xl md:rounded-2xl shadow-lg transition-all transform hover:scale-110 active:scale-95"
               >
                 🗑️
               </button>
             </div>
 
-            <div className="flex justify-center gap-4 mt-6">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mt-4 md:mt-6">
               <button
                 onClick={handleHint}
                 disabled={hints <= 0}
-                className={`px-8 py-4 rounded-2xl font-bold text-xl shadow-lg transition-all transform hover:scale-105 ${
+                className={`px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl font-bold text-base md:text-xl shadow-lg transition-all transform hover:scale-105 ${
                   hints > 0
                     ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white hover:from-yellow-500 hover:to-orange-500'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -395,7 +395,7 @@ const App: React.FC = () => {
 
               <button
                 onClick={initGame}
-                className="px-8 py-4 bg-gradient-to-r from-green-400 to-blue-400 text-white rounded-2xl font-bold text-xl shadow-lg transition-all transform hover:scale-105 hover:from-green-500 hover:to-blue-500"
+                className="px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-green-400 to-blue-400 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-xl shadow-lg transition-all transform hover:scale-105 hover:from-green-500 hover:to-blue-500"
               >
                 🎲 새 게임
               </button>
@@ -403,9 +403,9 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-4 shadow-xl">
-          <h2 className="text-2xl font-bold text-purple-600 mb-3">🎯 게임 방법</h2>
-          <ul className="space-y-2 text-lg">
+        <div className="bg-white rounded-xl md:rounded-2xl p-3 md:p-4 shadow-xl">
+          <h2 className="text-lg md:text-2xl font-bold text-purple-600 mb-2 md:mb-3">🎯 게임 방법</h2>
+          <ul className="space-y-1 md:space-y-2 text-sm md:text-lg">
             <li className="flex items-start">
               <span className="mr-2">📝</span>
               <span>1~9까지 숫자를 빈 칸에 넣어요</span>
